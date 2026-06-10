@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>桃園尋跡：社創魂覺醒</title>
+<title>拾光桃園：十三隅星芒</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
@@ -17,6 +17,8 @@
     overflow-x: hidden;
     position: relative;
     overscroll-behavior-y: none;
+    background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+    color: #134e4a;
   }
 
   #app {
@@ -29,29 +31,35 @@
     z-index: 10;
   }
 
-  .fade-in { animation: fadeIn 0.3s ease-out forwards; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   
-  .card-glow-culture { box-shadow: 0 0 20px rgba(180, 83, 9, 0.4), inset 0 0 20px rgba(180, 83, 9, 0.2); border-color: #b45309; }
-  .card-glow-circular { box-shadow: 0 0 20px rgba(148, 163, 184, 0.4), inset 0 0 20px rgba(148, 163, 184, 0.2); border-color: #94a3b8; }
-  .card-glow-community { box-shadow: 0 0 20px rgba(234, 88, 12, 0.4), inset 0 0 20px rgba(234, 88, 12, 0.2); border-color: #ea580c; }
-  .card-glow-tech { box-shadow: 0 0 20px rgba(56, 189, 248, 0.4), inset 0 0 20px rgba(56, 189, 248, 0.2); border-color: #38bdf8; }
-  .card-glow-eco { box-shadow: 0 0 20px rgba(132, 204, 22, 0.4), inset 0 0 20px rgba(132, 204, 22, 0.2); border-color: #84cc16; }
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 32px rgba(13, 148, 136, 0.08);
+    border-radius: 24px;
+  }
 
-  .pixel-border {
-    position: relative;
-    border: 2px solid #475569;
-    background: #0f172a;
-  }
-  
-  .scanlines {
-    position: fixed; inset: 0; pointer-events: none; z-index: 50;
-    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
-    background-size: 100% 4px;
-  }
+  .card-glow-coastal { box-shadow: 0 8px 25px rgba(14, 165, 233, 0.2); border: 2px solid #38bdf8; }
+  .card-glow-urban { box-shadow: 0 8px 25px rgba(168, 85, 247, 0.2); border: 2px solid #c084fc; }
+  .card-glow-foothill { box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2); border: 2px solid #fbbf24; }
+  .card-glow-indigenous { box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2); border: 2px solid #34d399; }
+  .card-glow-tech { box-shadow: 0 8px 25px rgba(6, 182, 212, 0.2); border: 2px solid #22d3ee; }
 
   button {
     -webkit-tap-highlight-color: transparent;
+  }
+
+  .floating-shape {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.6;
   }
 </style>
 
@@ -74,136 +82,134 @@
   window.saveToFirebase = async (data) => {
     try {
       await addDoc(collection(db, "quests"), data);
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 </script>
 
 <script>
   const questions = [
     {
-      title: "【場景】踏入桃園這片多元土地，最先吸引你目光的是？",
+      title: "【場景】踏入桃園這片土地，最先吸引目光的是？",
       options: [
-        { text: "老屋屋簷下隨風搖曳的客家花布與竹編", type: "culture" },
-        { text: "廢棄工廠轉型再造的環保藝術空間", type: "circular" },
-        { text: "充滿人情味與歡笑聲的青銀共創基地", type: "community" },
-        { text: "閃爍數據光芒的智慧城市指揮中心", type: "tech" },
-        { text: "陽光下波光粼粼的千口埤塘與綠意", type: "eco" }
+        { text: "海風吹拂的海岸線與潔白風力發電機", type: "coastal" },
+        { text: "川流不息的都會街區與多元文化市集", type: "urban" },
+        { text: "層巒疊嶂的丘陵茶園與百年歷史老街", type: "foothill" },
+        { text: "雲霧繚繞的神木林與幽靜的泰雅部落", type: "indigenous" },
+        { text: "波光粼粼的埤塘與周邊活化再生基地", type: "tech" }
       ]
     },
     {
-      title: "【聽覺】閉上眼，哪種聲音最能平息你的焦慮？",
+      title: "【聽覺】閉上眼，哪種聲音最能讓你感到平靜？",
       options: [
-        { text: "老師傅手中竹片交織摩擦的細微聲響", type: "culture" },
-        { text: "回收機具規律運轉、重塑物質的節奏聲", type: "circular" },
-        { text: "社區街角街坊鄰居熱絡交談的溫暖語音", type: "community" },
-        { text: "鍵盤敲擊與伺服器穩定運轉的低鳴", type: "tech" },
-        { text: "微風拂過稻田與白鷺鷥輕掠水面的聲音", type: "eco" }
+        { text: "海浪拍打礁石與海岸植物的沙沙聲", type: "coastal" },
+        { text: "不同語言交織的熱鬧市集交談聲", type: "urban" },
+        { text: "老街職人敲打木器與煮茶的水沸聲", type: "foothill" },
+        { text: "山林間清脆鳥鳴與部落的傳統歌謠", type: "indigenous" },
+        { text: "微風拂過水面與回收機具規律的低鳴", type: "tech" }
       ]
     },
     {
-      title: "【觸覺】雙手觸碰哪種材質，能讓你感到最踏實？",
+      title: "【觸覺】雙手觸碰哪種材質，能讓你感到踏實？",
       options: [
-        { text: "堅韌且帶有天然紋理的手工竹材", type: "culture" },
-        { text: "經過重塑與再造的再生工業媒材", type: "circular" },
-        { text: "眾人協力拼湊、帶有溫度的社區創作", type: "community" },
-        { text: "平滑且充滿未來感的科技互動面板", type: "tech" },
-        { text: "濕潤且孕育萬物的埤塘邊泥土", type: "eco" }
+        { text: "經海水沖刷圓潤的漂流木與海廢玻璃", type: "coastal" },
+        { text: "傳遞新知與連結人群的平滑數位裝置", type: "urban" },
+        { text: "帶有歷史紋理的客家花布與建築紅磚", type: "foothill" },
+        { text: "堅韌且散發自然香氣的高山竹藤與林木", type: "indigenous" },
+        { text: "經過循環再造、重獲新生的再生媒材", type: "tech" }
       ]
     },
     {
-      title: "【戰鬥】面對一團混亂的突發狀況，你的處理方式是？",
+      title: "【行動】面對社區遭遇的困難，你的處理方式是？",
       options: [
-        { text: "依循傳統智慧，按部就班拆解問題", type: "culture" },
-        { text: "重新拆解資源，化危機為全新轉機", type: "circular" },
-        { text: "召集夥伴開會，透過溝通凝聚共識", type: "community" },
-        { text: "運用數據分析，尋找最有效率解法", type: "tech" },
-        { text: "順應自然發展，給予時間自我修復", type: "eco" }
+        { text: "發起環境倡議行動，守護珍貴自然棲地", type: "coastal" },
+        { text: "舉辦文化交流活動，打破族群世代隔閡", type: "urban" },
+        { text: "挖掘在地歷史記憶，轉化為文創與體驗", type: "foothill" },
+        { text: "深入部落傾聽需求，協助推廣部落經濟", type: "indigenous" },
+        { text: "導入設計思考工具，將廢棄物轉為資源", type: "tech" }
       ]
     },
     {
-      title: "【組隊】在一個團隊中，你通常扮演什麼樣的角色？",
+      title: "【組隊】在團隊合作中，你通常扮演什麼角色？",
       options: [
-        { text: "默默傳承經驗，成為團隊穩定力量", type: "culture" },
-        { text: "打破既有框架，推動資源循環利用", type: "circular" },
-        { text: "營造舒適氛圍，讓大家緊密連結", type: "community" },
-        { text: "提供創新工具，提升整體行動效率", type: "tech" },
-        { text: "給予溫暖關懷，守護身邊疲憊夥伴", type: "eco" }
+        { text: "走在最前線，勇敢對抗環境危機倡議者", type: "coastal" },
+        { text: "串連不同背景資源，建立多元網絡橋樑", type: "urban" },
+        { text: "默默記錄在地故事，傳承文化記憶守護者", type: "foothill" },
+        { text: "尊重自然法則，與土地共生共榮陪伴者", type: "indigenous" },
+        { text: "打破既有框架，提出循環再生方案創新者", type: "tech" }
       ]
     }
   ];
 
   const results = {
-    culture: {
-      class: "客家竹編巧匠", title: "Lv.1 傳承的竹編巧匠", attr: "文化 / 傳承 / 堅韌",
-      stats: { str: 60, agi: 40, int: 85, focus: 99 },
-      description: "你擁有極高專注力，在細節中尋找完美。桃園客家工匠與你有著同樣頻率，去老街巷弄裡尋找竹香，刻畫屬於你的傳說吧！",
-      action: "接取任務：前往富岡老街尋找在地竹編工坊",
-      style: "card-glow-culture text-amber-500", btn: "bg-amber-700 hover:bg-amber-600",
-      barColor: "bg-amber-500",
-      imgUrl: "assets/images/culture-artisan.jpg",
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=三峽老街+木雕",
+    coastal: {
+      class: "濱海巡浪者", title: "Lv.1 守護海洋的巡浪者", attr: "環境 / 倡議 / 蔚藍",
+      stats: { str: 60, agi: 85, int: 50, focus: 70 },
+      description: "你聽得見海洋呼喚，對環境保育有強烈使命感。大園、觀音與新屋的海岸線正需要你，用行動守護每一吋沙灘與藻礁。",
+      action: "接取任務：前往新屋海岸進行淨灘與廢料創作",
+      style: "card-glow-coastal text-sky-600", btn: "bg-sky-500 hover:bg-sky-600 text-white shadow-md shadow-sky-200",
+      barColor: "bg-sky-400",
+      imgUrl: "assets/images/coastal.jpg",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=新屋綠色隧道",
       partner: "tech"
     },
-    circular: {
-      class: "循環鍊金術士", title: "Lv.1 蛻變的鍊金術士", attr: "再生 / 轉化 / 洞察",
-      stats: { str: 99, agi: 75, int: 50, focus: 60 },
-      description: "你充滿熱情與直覺，喜歡用雙手創造確切改變。廢材再造廠火光與力道，正是你靈魂寫照。敲擊出專屬裝備吧！",
-      action: "接取任務：前往循環經濟基地體驗廢物再造",
-      style: "card-glow-circular text-slate-300", btn: "bg-slate-600 hover:bg-slate-500",
-      barColor: "bg-slate-300",
-      imgUrl: "assets/images/circular-alchemist.jpg",
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=三峽老街+金工",
-      partner: "eco"
+    urban: {
+      class: "都會文化橋樑", title: "Lv.1 多元共融的文化橋樑", attr: "多元 / 連結 / 活力",
+      stats: { str: 40, agi: 75, int: 85, focus: 60 },
+      description: "你擅長打破隔閡，穿梭在不同族群與世代之間。在桃園與中壢的都會區，發揮你串連網絡的魔力，編織城市新面貌。",
+      action: "接取任務：前往中壢車站周邊參與東南亞走讀",
+      style: "card-glow-urban text-fuchsia-600", btn: "bg-fuchsia-500 hover:bg-fuchsia-600 text-white shadow-md shadow-fuchsia-200",
+      barColor: "bg-fuchsia-400",
+      imgUrl: "assets/images/urban.jpg",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=中壢火車站",
+      partner: "foothill"
     },
-    community: {
-      class: "聚落共生詩人", title: "Lv.1 溫暖的聚落詩人", attr: "共好 / 傾聽 / 凝聚",
-      stats: { str: 30, agi: 40, int: 99, focus: 80 },
-      description: "你懂得順應自然，相信時間會帶來最好魔法。桃園共生聚落裡，有著與你一樣溫潤靈魂。去見證社區蛻變吧！",
-      action: "接取任務：前往社區營造據點參與地方共食",
-      style: "card-glow-community text-orange-500", btn: "bg-orange-700 hover:bg-orange-600",
-      barColor: "bg-orange-500",
-      imgUrl: "assets/images/community-bard.jpg",
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=禾乃川國產豆製所",
-      partner: "circular"
+    foothill: {
+      class: "淺山記憶紡梭", title: "Lv.1 傳承歷史的記憶紡梭", attr: "文創 / 傳承 / 溫潤",
+      stats: { str: 30, agi: 40, int: 90, focus: 95 },
+      description: "你珍視歲月留下痕跡，總能從老故事中翻轉出新意。大溪、龍潭與楊梅的老街區正等待你注入活水，延續地方生命力。",
+      action: "接取任務：前往大溪老街體驗木藝或客家染織",
+      style: "card-glow-foothill text-amber-600", btn: "bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-200",
+      barColor: "bg-amber-400",
+      imgUrl: "assets/images/foothill.jpg",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=大溪木藝生態博物館",
+      partner: "urban"
+    },
+    indigenous: {
+      class: "原鄉山林行者", title: "Lv.1 與地共生的山林行者", attr: "共生 / 陪伴 / 堅韌",
+      stats: { str: 70, agi: 60, int: 75, focus: 85 },
+      description: "你嚮往與自然和諧共存，懂得放慢腳步傾聽土地的聲音。復興區的部落需要你溫暖陪伴，共同推廣部落經濟。",
+      action: "接取任務：前往復興區部落支持在地農產與生態",
+      style: "card-glow-indigenous text-emerald-600", btn: "bg-emerald-500 hover:bg-emerald-600 text-white shadow-md shadow-emerald-200",
+      barColor: "bg-emerald-400",
+      imgUrl: "assets/images/indigenous.jpg",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=角板山商圈",
+      partner: "coastal"
     },
     tech: {
-      class: "數位平權魔法師", title: "Lv.1 連結的數位法師", attr: "科技 / 連結 / 創新",
-      stats: { str: 40, agi: 85, int: 90, focus: 70 },
-      description: "你像水一樣適應各種環境，卻能在浸潤中留下深刻色彩。智慧城市光芒呼喚你，去基地調製魔法藥水吧！",
-      action: "接取任務：前往青年創育基地解鎖科技體驗",
-      style: "card-glow-tech text-sky-400", btn: "bg-sky-700 hover:bg-sky-600",
-      barColor: "bg-sky-400",
-      imgUrl: "assets/images/tech-wizard.jpg",
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=三峽染工坊",
-      partner: "culture"
-    },
-    eco: {
-      class: "埤塘生態德魯伊", title: "Lv.1 守護的生態德魯伊", attr: "自然 / 守護 / 孕育",
-      stats: { str: 45, agi: 60, int: 85, focus: 90 },
-      description: "你與土地有著深刻連結，總能將生活苦澀轉化為回甘智慧。前往桃園埤塘，尋找能治癒隊友自然靈藥吧！",
-      action: "接取任務：前往八德埤塘生態公園進行導覽",
-      style: "card-glow-eco text-lime-400", btn: "bg-lime-700 hover:bg-lime-600",
-      barColor: "bg-lime-400",
-      imgUrl: "assets/images/eco-druid.jpg",
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=三峽老街+茶行",
-      partner: "community"
+      class: "埤塘循環創客", title: "Lv.1 再造價值的循環創客", attr: "科技 / 循環 / 創新",
+      stats: { str: 50, agi: 50, int: 95, focus: 80 },
+      description: "你具備洞察問題雙眼，能將看似無用事物轉化為寶藏。在八德、平鎮等地的再生基地，實踐你的創新解方。",
+      action: "接取任務：前往八德埤塘公園或循環基地體驗",
+      style: "card-glow-tech text-cyan-600", btn: "bg-cyan-500 hover:bg-cyan-600 text-white shadow-md shadow-cyan-200",
+      barColor: "bg-cyan-400",
+      imgUrl: "assets/images/tech.jpg",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=八德埤塘自然生態公園",
+      partner: "indigenous"
     }
   };
 
   const bgmAudios = {
-    culture: new Audio('assets/audio/culture.mp3'),
-    circular: new Audio('assets/audio/circular.mp3'),
-    community: new Audio('assets/audio/community.mp3'),
-    tech: new Audio('assets/audio/tech.mp3'),
-    eco: new Audio('assets/audio/eco.mp3')
+    coastal: new Audio('assets/audio/coastal.mp3'),
+    urban: new Audio('assets/audio/urban.mp3'),
+    foothill: new Audio('assets/audio/foothill.mp3'),
+    indigenous: new Audio('assets/audio/indigenous.mp3'),
+    tech: new Audio('assets/audio/tech.mp3')
   };
   
   Object.values(bgmAudios).forEach(audio => audio.loop = true);
 
   let step = 0;
-  let scores = { culture: 0, circular: 0, community: 0, tech: 0, eco: 0 };
+  let scores = { coastal: 0, urban: 0, foothill: 0, indigenous: 0, tech: 0 };
   let finalResult = null;
   let isMuted = false;
   let audioUnlocked = false;
@@ -221,7 +227,7 @@
     const container = document.getElementById('toast-container');
     if (!container) return;
     const toast = document.createElement('div');
-    toast.className = 'bg-amber-500 text-slate-900 px-5 py-3 rounded shadow-xl font-bold text-sm tracking-widest fade-in border border-amber-300 pointer-events-auto';
+    toast.className = 'bg-teal-600 text-white px-6 py-3 rounded-full shadow-lg font-bold text-sm tracking-widest fade-in pointer-events-auto border border-teal-500/50';
     toast.innerHTML = msg;
     container.appendChild(toast);
     setTimeout(() => {
@@ -288,10 +294,10 @@
 
   window.addEventListener('popstate', (e) => {
     if (step > 0 && step <= questions.length) {
-      showModal('確定終止尋蹤嗎？', '目前同步進度將會遺失。', () => {
+      showModal('確定終止探索嗎？', '目前收集到的星芒碎片將會遺失。', () => {
         step = 0;
         userData.answers = [];
-        scores = { culture: 0, circular: 0, community: 0, tech: 0, eco: 0 };
+        scores = { coastal: 0, urban: 0, foothill: 0, indigenous: 0, tech: 0 };
         render();
       });
     } else {
@@ -306,18 +312,18 @@
     window.scrollTo(0, 0);
     app.innerHTML = `
       <div class="flex-1 flex flex-col items-center justify-center p-6 text-center fade-in w-full max-w-md mx-auto">
-        <div class="text-amber-500 mb-6 animate-pulse">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m17 5-5-3-5 3v14l5 3 5-3z"/></svg>
+        <div class="text-teal-500 mb-6 animate-pulse">
+          <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
         </div>
-        <h2 class="text-xl font-bold tracking-widest text-slate-200 mb-2">踏入探索結界</h2>
-        <p class="text-slate-500 text-sm">正在同步時空軌跡...</p>
+        <h2 class="text-xl font-bold tracking-widest text-teal-900 mb-2">凝聚星芒碎片</h2>
+        <p class="text-teal-600/70 text-sm">正在同步水文脈絡...</p>
       </div>
     `;
     
     setTimeout(() => {
       step = 1;
       userData.answers = [];
-      scores = { culture: 0, circular: 0, community: 0, tech: 0, eco: 0 };
+      scores = { coastal: 0, urban: 0, foothill: 0, indigenous: 0, tech: 0 };
       render();
     }, 1500);
   }
@@ -341,7 +347,7 @@
     let maxScore = -1;
     let possibleTypes = [];
     
-    ['culture', 'circular', 'community', 'tech', 'eco'].forEach(type => {
+    ['coastal', 'urban', 'foothill', 'indigenous', 'tech'].forEach(type => {
       if (scores[type] > maxScore) {
         maxScore = scores[type];
         possibleTypes = [type];
@@ -372,7 +378,7 @@
   function downloadCard() {
     const btn = document.getElementById('download-btn');
     const originalText = btn.innerHTML;
-    btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> 靈魂結印中...`;
+    btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-teal-600 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> 星芒結印中...`;
 
     const cardWrap = document.getElementById('character-card-export-wrap');
 
@@ -380,12 +386,12 @@
       setTimeout(() => {
         html2canvas(cardWrap, {
           scale: 2,
-          backgroundColor: '#0f172a',
+          backgroundColor: '#f4fbf8',
           useCORS: true,
           logging: false
         }).then(canvas => {
           const link = document.createElement('a');
-          link.download = `桃園尋跡_${results[finalResult].class}.png`;
+          link.download = `拾光桃園_${results[finalResult].class}.png`;
           link.href = canvas.toDataURL('image/png');
           link.click();
           btn.innerHTML = originalText;
@@ -403,7 +409,7 @@
     const shareUrl = `${baseUrl}?need=${needType}`;
     
     if (navigator.share) {
-      navigator.share({ title: '桃園尋跡社創魂覺醒', url: shareUrl }).catch(() => {});
+      navigator.share({ title: '拾光桃園十三隅星芒', url: shareUrl }).catch(() => {});
     } else {
       const el = document.createElement('textarea');
       el.value = shareUrl;
@@ -424,41 +430,41 @@
     const app = document.getElementById('app');
     const needParam = new URLSearchParams(window.location.search).get('need');
     let subtitleHtml = `
-      來到桃園，不再走馬看花。<br/>
+      來到桃園，不再只是路過。<br/>
       憑直覺回答 5 個問題，<br/>
-      喚醒你靈魂深處的社創屬性，<br/>
-      開啟桃園在地專屬任務。
+      喚醒靈魂深處的社創屬性，<br/>
+      領取你的桃園專屬任務。
     `;
 
     if (needParam && results[needParam]) {
         subtitleHtml = `
-          <span class="text-amber-400 font-bold block mb-2">朋友正在尋找【${results[needParam].class}】隊友！</span>
-          測試你是否為命中注定夥伴。<br/>
+          <span class="text-teal-600 font-bold block mb-2">朋友正在尋找【${results[needParam].class}】隊友！</span>
+          測試你是否為命定的同行夥伴。<br/>
           喚醒你的社創屬性，開啟桃園專屬任務。
         `;
     }
 
     app.innerHTML = `
       <div class="flex-1 flex flex-col items-center justify-center p-6 fade-in w-full">
-        <div class="text-center max-w-md w-full pixel-border p-8 shadow-2xl bg-slate-900/90 backdrop-blur-sm mx-auto">
-          <p class="text-xs text-slate-400 tracking-widest mb-4">TAOYUAN IMPACT QUEST</p>
-          <h1 class="text-3xl sm:text-4xl font-black text-slate-100 mb-2 leading-tight">
-            桃園尋跡<br/>
-            <span class="text-amber-500 text-4xl sm:text-5xl mt-2 block">社創魂覺醒</span>
+        <div class="text-center max-w-md w-full glass-panel p-8 md:p-10 mx-auto">
+          <p class="text-xs text-teal-600/70 tracking-widest mb-3 font-sans">TAOYUAN IMPACT QUEST</p>
+          <h1 class="text-4xl sm:text-5xl font-black text-teal-900 mb-2 leading-tight">
+            拾光桃園<br/>
+            <span class="text-teal-600 text-3xl sm:text-4xl mt-3 block font-bold">十三隅星芒</span>
           </h1>
           
-          <div class="my-6 sm:my-8 h-px bg-gradient-to-r from-transparent via-slate-500 to-transparent"></div>
+          <div class="my-6 sm:my-8 h-px bg-gradient-to-r from-transparent via-teal-200 to-transparent"></div>
           
-          <p class="text-slate-400 mb-8 leading-relaxed text-sm sm:text-base">
+          <p class="text-teal-800/80 mb-8 leading-relaxed text-sm sm:text-base font-sans">
             ${subtitleHtml}
           </p>
           
-          <button onclick="handleStart()" class="w-full bg-slate-800 border-2 border-slate-500 text-slate-200 font-bold py-4 hover:bg-slate-700 hover:border-amber-500 hover:text-amber-400 transition-all active:scale-95 flex items-center justify-center gap-2 tracking-widest outline-none">
+          <button onclick="handleStart()" class="w-full bg-teal-600 text-white font-bold py-4 rounded-xl hover:bg-teal-500 shadow-lg shadow-teal-600/30 transition-all active:scale-95 flex items-center justify-center gap-2 tracking-widest outline-none font-sans">
             START QUEST
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </button>
         </div>
-        <div class="mt-8 text-xs text-slate-600 tracking-widest pb-4">
+        <div class="mt-8 text-xs text-teal-800/50 tracking-widest pb-4 font-sans">
           © 2026 IMPACT STAR 
         </div>
       </div>
@@ -471,12 +477,12 @@
     const q = questions[step - 1];
     
     let optionsHtml = q.options.map(opt => `
-      <button onclick="handleAnswer('${opt.type}')" class="text-left w-full p-4 bg-slate-800 border border-slate-700 hover:border-amber-500 active:border-amber-500 transition-all active:scale-[0.98] group relative overflow-hidden rounded-md outline-none flex items-start">
-        <div class="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <button onclick="handleAnswer('${opt.type}')" class="text-left w-full p-4 glass-panel hover:bg-white/90 active:bg-white/50 transition-all active:scale-[0.98] group relative overflow-hidden outline-none flex items-start border border-teal-100/50">
+        <div class="absolute inset-0 bg-gradient-to-r from-teal-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
         <div class="flex-shrink-0 mt-0.5 mr-3 relative z-10">
-          <svg class="w-4 h-4 text-slate-500 group-hover:text-amber-500 transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          <svg class="w-5 h-5 text-teal-300 group-hover:text-teal-500 transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
         </div>
-        <span class="text-slate-300 font-medium leading-relaxed group-hover:text-amber-400 relative z-10 flex-1">
+        <span class="text-teal-900 font-medium leading-relaxed relative z-10 flex-1 font-sans">
           ${opt.text}
         </span>
       </button>
@@ -484,18 +490,16 @@
 
     app.innerHTML = `
       <div class="flex-1 flex flex-col p-4 sm:p-6 fade-in w-full max-w-lg mx-auto">
-        <div class="flex justify-between items-center mb-4 pt-4 border-b border-slate-800 pb-4 shrink-0">
-          <span class="text-sm font-bold text-amber-500 tracking-widest">STAGE ${step} / ${questions.length}</span>
-          <div class="flex gap-1">
-            ${Array.from({length: questions.length}).map((_, i) => `<div class="h-1.5 sm:h-1 w-3 sm:w-4 rounded-sm sm:rounded-none ${i < step ? 'bg-amber-500' : 'bg-slate-800'}"></div>`).join('')}
+        <div class="flex justify-between items-center mb-6 pt-4 shrink-0 font-sans">
+          <span class="text-sm font-bold text-teal-600 tracking-widest">STAGE ${step} / ${questions.length}</span>
+          <div class="flex gap-1.5">
+            ${Array.from({length: questions.length}).map((_, i) => `<div class="h-1.5 w-4 rounded-full ${i < step ? 'bg-teal-500 shadow-sm shadow-teal-300' : 'bg-teal-100'}"></div>`).join('')}
           </div>
         </div>
         
         <div class="flex-1 flex flex-col justify-start pt-2 pb-8">
-          <div class="pixel-border p-5 sm:p-6 mb-6 relative bg-slate-900/90 backdrop-blur-sm">
-            <div class="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-amber-500"></div>
-            <div class="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-amber-500"></div>
-            <h2 class="text-lg sm:text-xl font-bold text-slate-100 leading-relaxed">${q.title}</h2>
+          <div class="mb-8 px-2">
+            <h2 class="text-xl sm:text-2xl font-bold text-teal-950 leading-relaxed">${q.title}</h2>
           </div>
           <div class="flex flex-col gap-3 sm:gap-4">
             ${optionsHtml}
@@ -508,14 +512,18 @@
   function renderCalculating() {
     window.scrollTo(0, 0);
     const app = document.getElementById('app');
-    const flavorTexts = ["讀取靈魂碎片...", "共鳴在地頻率...", "凝聚社創精神...", "鑄造專屬憑證..."];
+    const flavorTexts = ["讀取水文脈絡...", "共鳴在地頻率...", "凝聚十三隅光芒...", "鑄造專屬憑證..."];
     let textIdx = 0;
     
     app.innerHTML = `
       <div class="flex-1 flex flex-col items-center justify-center p-6 text-center fade-in w-full max-w-md mx-auto">
-        <div class="w-16 h-16 border-4 border-slate-700 border-t-amber-500 rounded-full animate-spin mb-8"></div>
-        <h2 class="text-xl font-bold tracking-widest text-slate-200 mb-3">正在分析靈魂屬性</h2>
-        <p id="calc-text" class="text-amber-500 text-sm tracking-widest font-bold h-5">${flavorTexts[0]}</p>
+        <div class="relative w-20 h-20 mb-8">
+          <div class="absolute inset-0 border-4 border-teal-100 rounded-full"></div>
+          <div class="absolute inset-0 border-4 border-teal-500 rounded-full border-t-transparent animate-spin"></div>
+          <svg class="absolute inset-0 m-auto text-teal-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+        </div>
+        <h2 class="text-xl font-bold tracking-widest text-teal-900 mb-3">正在分析靈魂屬性</h2>
+        <p id="calc-text" class="text-teal-600 text-sm tracking-widest font-bold h-5 font-sans">${flavorTexts[0]}</p>
       </div>
     `;
 
@@ -533,106 +541,89 @@
     const app = document.getElementById('app');
     
     const statBar = (label, val, colorClass) => `
-      <div class="flex items-center gap-3 text-xs mb-1.5">
-        <span class="text-slate-400 w-16 text-right flex-shrink-0">${label}</span>
-        <div class="flex-1 h-1.5 bg-slate-800 rounded-full relative overflow-hidden">
-          <div class="absolute top-0 left-0 h-full ${colorClass}" style="width: ${val}%"></div>
+      <div class="flex items-center gap-3 text-xs mb-2 font-sans">
+        <span class="text-teal-700 font-medium w-16 text-right flex-shrink-0">${label}</span>
+        <div class="flex-1 h-2 bg-teal-50 rounded-full relative overflow-hidden border border-teal-100">
+          <div class="absolute top-0 left-0 h-full ${colorClass} rounded-full" style="width: ${val}%"></div>
         </div>
-        <span class="text-slate-300 w-6 text-right flex-shrink-0">${val}</span>
+        <span class="text-teal-800 font-bold w-6 text-right flex-shrink-0">${val}</span>
       </div>
     `;
 
     app.innerHTML = `
       <div class="flex-1 py-8 sm:py-10 px-4 fade-in flex flex-col items-center w-full mx-auto">
-        <p class="text-slate-400 text-xs tracking-widest mb-4">CHARACTER UNLOCKED</p>
+        <p class="text-teal-600 text-xs tracking-widest mb-4 font-sans font-bold">CHARACTER UNLOCKED</p>
         
-        <div id="character-card-export-wrap" class="w-full bg-slate-950 p-2 sm:p-4 mb-4 flex justify-center" style="max-width: 400px;">
-          <div id="character-card-export" class="w-full ${res.style} bg-slate-900 border-2 rounded-lg p-1 relative mx-auto">
-            <div class="w-full aspect-[16/9] sm:h-48 bg-slate-800 relative flex items-center justify-center border border-slate-700/50 mb-4 overflow-hidden rounded-t-md">
-                <img src="${res.imgUrl}" alt="${res.class}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMxZTI5M2IiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzQ3NTU2OSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj7ogbfkurrlvbHlg488L3RleHQ+PC9zdmc+'" class="absolute inset-0 w-full h-full object-cover scale-[1.08] origin-center z-0" crossorigin="anonymous" />
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent z-10"></div>
+        <div id="character-card-export-wrap" class="w-full p-2 sm:p-4 mb-4 flex justify-center" style="max-width: 400px;">
+          <div id="character-card-export" class="w-full ${res.style} bg-white/90 backdrop-blur-md rounded-2xl overflow-hidden relative mx-auto">
+            <div class="w-full aspect-[16/9] sm:h-48 bg-teal-50 relative flex items-center justify-center overflow-hidden">
+                <img src="${res.imgUrl}" alt="${res.class}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmMGZkZjQiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzEzNGU0YSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj7ogbfkurrlvbHlg488L3RleHQ+PC9zdmc+'" class="absolute inset-0 w-full h-full object-cover z-0" crossorigin="anonymous" />
+                <div class="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent z-10"></div>
             </div>
             
-            <div class="px-4 sm:px-5 pb-5 relative z-20">
-              <div class="inline-block px-2 py-0.5 border border-slate-500 rounded text-[10px] tracking-widest mb-3 text-slate-300 bg-slate-900/50 backdrop-blur-sm">${res.attr}</div>
-              <h1 class="text-xl sm:text-2xl font-black text-slate-100 mb-4 leading-tight">${res.title}</h1>
+            <div class="px-5 sm:px-6 pb-6 pt-2 relative z-20">
+              <div class="inline-block px-3 py-1 bg-teal-50 border border-teal-200 rounded-full text-[10px] tracking-widest mb-3 text-teal-700 font-sans font-bold">${res.attr}</div>
+              <h1 class="text-2xl sm:text-3xl font-black text-teal-950 mb-5 leading-tight">${res.title}</h1>
               
-              <div class="bg-slate-950/80 p-3 rounded border border-slate-800 mb-4">
-                 ${statBar('力量 STR', res.stats.str, res.barColor)}
-                 ${statBar('敏捷 AGI', res.stats.agi, res.barColor)}
-                 ${statBar('智力 INT', res.stats.int, res.barColor)}
-                 ${statBar('專注 FOC', res.stats.focus, res.barColor)}
+              <div class="bg-white/60 p-4 rounded-xl border border-teal-50 mb-5 shadow-sm">
+                 ${statBar('行動 STR', res.stats.str, res.barColor)}
+                 ${statBar('彈性 AGI', res.stats.agi, res.barColor)}
+                 ${statBar('洞察 INT', res.stats.int, res.barColor)}
+                 ${statBar('共感 FOC', res.stats.focus, res.barColor)}
               </div>
 
-              <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-2 text-justify">
+              <p class="text-teal-800 text-sm leading-relaxed mb-2 text-justify font-sans">
                 ${res.description}
               </p>
             </div>
           </div>
         </div>
 
-        <div class="w-full px-2" style="max-width: 380px;">
-          <div class="bg-slate-800 border border-slate-600 rounded-lg p-4 sm:p-5 shadow-lg relative overflow-hidden mb-6">
-             <h3 class="font-bold text-amber-400 mb-2 flex items-center gap-2 text-sm tracking-wider">
-               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <div class="w-full px-2 font-sans" style="max-width: 380px;">
+          <div class="glass-panel p-5 sm:p-6 relative overflow-hidden mb-6">
+             <h3 class="font-bold text-teal-800 mb-2 flex items-center gap-2 text-sm tracking-wider">
+               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                尋找命定隊友
              </h3>
-             <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
-               你的靈魂最需要 <span class="${partnerRes.style} font-bold px-1 rounded-sm">${partnerRes.class}</span> 的輔助。
+             <p class="text-teal-700 text-sm leading-relaxed mb-4">
+               你的靈魂最需要 <span class="bg-white px-2 py-0.5 rounded shadow-sm font-bold border border-teal-100">${partnerRes.class}</span> 的輔助。
              </p>
-             <button id="share-btn" onclick="generateShareLink()" class="w-full bg-slate-700 hover:bg-slate-600 active:bg-slate-600 border border-slate-500 text-slate-200 font-bold py-3 transition-all flex items-center justify-center gap-2 tracking-widest text-sm rounded outline-none">
+             <button id="share-btn" onclick="generateShareLink()" class="w-full bg-white hover:bg-teal-50 border border-teal-200 text-teal-700 font-bold py-3 transition-all flex items-center justify-center gap-2 tracking-widest text-sm rounded-xl outline-none shadow-sm">
                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
                複製招募連結
              </button>
           </div>
 
-          <div class="bg-slate-800 border border-slate-600 rounded-lg p-4 sm:p-5 shadow-lg relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-1 h-full ${res.btn}"></div>
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="font-bold text-slate-200 flex items-center gap-2 text-sm tracking-wider">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${res.style}"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <div class="glass-panel p-5 sm:p-6 relative overflow-hidden">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-bold text-teal-900 flex items-center gap-2 text-base tracking-wider">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-500"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 專屬任務憑證
               </h3>
             </div>
             
-            <p class="text-[11px] sm:text-xs text-amber-400 mb-3 tracking-wide leading-relaxed">
-              ✨ 抵達桃園後，向店家出示此畫面領取
+            <p class="text-xs text-teal-600 mb-4 tracking-wide leading-relaxed">
+              ✨ 抵達指定行政區後，向合作店家出示此畫面領取
             </p>
 
-            <div class="bg-slate-900 p-3 sm:p-4 border-2 border-dashed border-slate-600 text-slate-200 text-xs sm:text-sm font-bold mb-4 text-center relative overflow-hidden rounded-md flex flex-col items-center justify-center">
-              <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 bg-slate-800 rounded-full border-r-2 border-slate-600"></div>
-              <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 bg-slate-800 rounded-full border-l-2 border-slate-600"></div>
-              
-              <span class="relative z-10 block px-4 break-words w-full">${res.action}</span>
-              
-              <div class="mt-3 opacity-30 flex justify-center w-full max-w-[80%] overflow-hidden">
-                <div class="h-5 sm:h-6 border-x-[3px] border-l-[6px] border-r-[2px] border-current border-solid flex justify-around gap-[2px] w-full max-w-[150px] shrink-0">
-                  <div class="w-[2px] bg-current h-full"></div>
-                  <div class="w-[4px] bg-current h-full"></div>
-                  <div class="w-[1px] bg-current h-full"></div>
-                  <div class="w-[3px] bg-current h-full"></div>
-                  <div class="w-[5px] bg-current h-full"></div>
-                  <div class="w-[2px] bg-current h-full"></div>
-                  <div class="w-[1px] bg-current h-full"></div>
-                  <div class="w-[4px] bg-current h-full"></div>
-                </div>
-              </div>
+            <div class="bg-white/80 p-4 border border-dashed border-teal-300 text-teal-900 text-sm font-bold mb-5 text-center relative overflow-hidden rounded-xl flex flex-col items-center justify-center shadow-inner">
+              <span class="relative z-10 block px-2 break-words w-full">${res.action}</span>
             </div>
             
-            <button onclick="window.open('${res.mapUrl}', '_blank')" class="w-full ${res.btn} border border-transparent text-white font-bold py-3 transition-all flex items-center justify-center gap-2 tracking-widest text-sm mb-3 rounded outline-none">
+            <button onclick="window.open('${res.mapUrl}', '_blank')" class="w-full ${res.btn} font-bold py-3.5 transition-all flex items-center justify-center gap-2 tracking-widest text-sm mb-3 rounded-xl outline-none border border-transparent">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
               開啟地圖導航
             </button>
             
-            <button id="download-btn" onclick="downloadCard()" class="w-full bg-transparent border border-slate-600 text-slate-400 font-bold py-3 hover:bg-slate-700 active:bg-slate-700 hover:text-slate-200 transition-all flex items-center justify-center gap-2 tracking-widest text-sm rounded outline-none">
+            <button id="download-btn" onclick="downloadCard()" class="w-full bg-white border border-teal-200 text-teal-600 font-bold py-3.5 hover:bg-teal-50 transition-all flex items-center justify-center gap-2 tracking-widest text-sm rounded-xl outline-none shadow-sm">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-              下載角色卡
+              下載專屬星芒卡
             </button>
           </div>
           
-          <div class="text-center mt-8 pb-4">
-            <button onclick="handleStart()" class="text-slate-500 text-xs sm:text-sm hover:text-slate-300 transition-colors tracking-widest outline-none py-2 px-4">
-              [ 重新進行屬性鑑定 ]
+          <div class="text-center mt-10 pb-6">
+            <button onclick="handleStart()" class="text-teal-500 text-sm hover:text-teal-700 transition-colors tracking-widest outline-none py-2 px-4 font-bold border-b border-teal-200 pb-1">
+              重新凝聚星芒
             </button>
           </div>
         </div>
@@ -654,10 +645,11 @@
   };
 </script>
 </head>
-<body class="bg-slate-950 text-slate-200 antialiased font-sans selection:bg-amber-500/30">
-  <div class="scanlines"></div>
+<body>
+  <div class="floating-shape bg-teal-200/50 w-96 h-96 top-[-10%] left-[-10%]"></div>
+  <div class="floating-shape bg-cyan-200/40 w-80 h-80 bottom-[-5%] right-[-5%]"></div>
   
-  <button id="mute-btn" onclick="toggleMute()" class="fixed top-4 right-4 z-[100] p-2.5 bg-slate-800/80 rounded-full border border-slate-600 text-slate-300 hover:text-amber-400 hover:border-amber-500 transition-all backdrop-blur-sm shadow-lg outline-none">
+  <button id="mute-btn" onclick="toggleMute()" class="fixed top-4 right-4 z-[100] p-2.5 bg-white/80 rounded-full border border-teal-100 text-teal-600 hover:text-teal-800 hover:border-teal-300 transition-all backdrop-blur-md shadow-sm outline-none">
     <svg id="mute-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
       <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
@@ -667,13 +659,13 @@
 
   <div id="toast-container" class="fixed top-20 left-1/2 -translate-x-1/2 z-[150] flex flex-col gap-3 pointer-events-none items-center w-full max-w-sm px-4"></div>
 
-  <div id="custom-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4">
-    <div class="bg-slate-900 border border-slate-700 p-6 rounded-lg max-w-sm w-full shadow-2xl">
-      <h3 id="modal-title" class="text-lg font-bold text-amber-500 mb-2"></h3>
-      <p id="modal-desc" class="text-slate-300 text-sm mb-6"></p>
+  <div id="custom-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center bg-teal-950/40 backdrop-blur-sm px-4 font-sans">
+    <div class="bg-white border border-teal-100 p-6 rounded-2xl max-w-sm w-full shadow-2xl">
+      <h3 id="modal-title" class="text-lg font-bold text-teal-800 mb-2"></h3>
+      <p id="modal-desc" class="text-teal-600 text-sm mb-6"></p>
       <div class="flex gap-3 justify-end">
-        <button id="modal-cancel" class="px-4 py-2 text-sm text-slate-400 hover:text-slate-200 transition-colors outline-none">取消</button>
-        <button id="modal-confirm" class="px-4 py-2 text-sm bg-slate-800 border border-slate-600 text-slate-200 rounded hover:bg-slate-700 hover:border-amber-500 transition-all outline-none">確定</button>
+        <button id="modal-cancel" class="px-4 py-2.5 text-sm text-teal-500 hover:text-teal-700 transition-colors outline-none font-bold">取消</button>
+        <button id="modal-confirm" class="px-5 py-2.5 text-sm bg-teal-600 text-white rounded-xl hover:bg-teal-500 transition-all outline-none font-bold shadow-sm">確定</button>
       </div>
     </div>
   </div>
