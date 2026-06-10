@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>社會創新影響力觀測站 - 拾光桃園</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- 引入 Chart.js 圖表套件 -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght=400;700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
+  
+  body { 
+    font-family: 'Noto Serif TC', serif; 
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #0b0f19 0%, #1e1b4b 50%, #090d16 100%);
+    color: #f8fafc;
+  }
+
+  .font-sans {
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+
+  .glass-panel {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border-radius: 24px;
+  }
+
+  .floating-shape {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .stat-glow {
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+  }
+</style>
+</head>
+<body class="relative flex flex-col items-center justify-start p-4 sm:p-8">
+
+  <!-- 背景微光裝飾 -->
+  <div class="floating-shape bg-purple-900/30 w-96 h-96 top-[-10%] left-[-10%]"></div>
+  <div class="floating-shape bg-indigo-900/20 w-80 h-80 bottom-[-5%] right-[-5%]"></div>
+
+  <!-- 主內容區 -->
+  <div class="relative z-10 w-full max-w-5xl mx-auto flex flex-col gap-6">
+    
+    <!-- 標題區 -->
+    <header class="text-center mb-4">
+      <p class="text-xs text-purple-400/80 tracking-widest mb-2 font-sans font-bold">REAL-TIME IMPACT DASHBOARD</p>
+      <h1 class="text-3xl sm:text-4xl font-black text-slate-100 tracking-wider">
+        社會創新影響力<span class="text-purple-400">觀測站</span>
+      </h1>
+      <div class="mt-4 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
+    </header>
+
+    <!-- 頂部數據卡片 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- 總參與人數 -->
+      <div class="glass-panel p-6 flex flex-col items-center justify-center text-center">
+        <p class="text-slate-400 text-sm font-sans mb-1">總凝聚星芒數 (總參與人數)</p>
+        <p id="total-count" class="text-5xl font-black text-white stat-glow font-sans">0</p>
+      </div>
+      
+      <!-- 主流屬性 -->
+      <div class="glass-panel p-6 flex flex-col items-center justify-center text-center md:col-span-2 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-transparent"></div>
+        <p class="text-slate-400 text-sm font-sans mb-1 relative z-10">目前桃園最具潛力的影響力能量</p>
+        <p id="top-result" class="text-3xl sm:text-4xl font-black text-purple-300 relative z-10 mt-1">分析中...</p>
+      </div>
+    </div>
+
+    <!-- 圖表區 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-2">
+      <!-- 圓餅圖：影響力維度分佈 -->
+      <div class="glass-panel p-6 flex flex-col">
+        <h3 class="text-purple-300 font-bold mb-6 text-center tracking-widest text-sm flex items-center justify-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+          十三隅社創屬性分佈
+        </h3>
+        <div class="relative flex-1 min-h-[300px] flex items-center justify-center">
+          <canvas id="distributionChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 長條圖：數量排行 -->
+      <div class="glass-panel p-6 flex flex-col">
+        <h3 class="text-purple-300 font-bold mb-6 text-center tracking-widest text-sm flex items-center justify-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-4"/></svg>
+          各維度能量累積排行
+        </h3>
+        <div class="relative flex-1 min-h-[300px] flex items-center justify-center">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部資訊 -->
+    <footer class="text-center mt-8 text-xs text-slate-500 tracking-widest font-sans pb-8">
+      即時數據同步中 • 2026桃園社會企業創業競賽
+    </footer>
+  </div>
+
+<script type="module">
+  // 引入 Firebase SDK
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+  import { getFirestore, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+  // 與 index.html 完全相同的設定
+  const firebaseConfig = {
+    apiKey: "AIzaSyBKyot66D6v2RLOts2qgFD0JAwin7undac",
+    authDomain: "taoyuan-impact.firebaseapp.com",
+    projectId: "taoyuan-impact",
+    storageBucket: "taoyuan-impact.firebasestorage.app",
+    messagingSenderId: "304231338614",
+    appId: "1:304231338614:web:d3eaf1e19699f67c0f8557"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 定義圖表所使用的顏色 (呼應網頁中的五大板塊色系)
+  const chartColors = {
+    "濱海巡浪者": { bg: "rgba(56, 189, 248, 0.7)", border: "#38bdf8" }, // Sky
+    "都會文化橋樑": { bg: "rgba(192, 132, 252, 0.7)", border: "#c084fc" }, // Fuchsia
+    "淺山記憶紡梭": { bg: "rgba(251, 191, 36, 0.7)", border: "#fbbf24" }, // Amber
+    "原鄉山林行者": { bg: "rgba(52, 211, 153, 0.7)", border: "#34d399" }, // Emerald
+    "埤塘循環創客": { bg: "rgba(34, 211, 238, 0.7)", border: "#22d3ee" }  // Cyan
+  };
+
+  const labels = Object.keys(chartColors);
+  const bgColors = labels.map(label => chartColors[label].bg);
+  const borderColors = labels.map(label => chartColors[label].border);
+
+  // 全域變數儲存圖表實例，以便即時更新
+  let distributionChartInstance = null;
+  let barChartInstance = null;
+
+  // 初始化並設定 Chart.js 全域字體顏色
+  Chart.defaults.color = '#94a3b8'; // text-slate-400
+  Chart.defaults.font.family = "'Noto Sans TC', sans-serif";
+
+  function initCharts() {
+    const distCtx = document.getElementById('distributionChart').getContext('2d');
+    const barCtx = document.getElementById('barChart').getContext('2d');
+
+    // 圓餅圖設定
+    distributionChartInstance = new Chart(distCtx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: [0, 0, 0, 0, 0],
+          backgroundColor: bgColors,
+          borderColor: borderColors,
+          borderWidth: 2,
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { padding: 20, font: { size: 12 } } }
+        },
+        cutout: '65%'
+      }
+    });
+
+    // 長條圖設定
+    barChartInstance = new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '人數',
+          data: [0, 0, 0, 0, 0],
+          backgroundColor: bgColors,
+          borderColor: borderColors,
+          borderWidth: 2,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: { 
+            beginAtZero: true, 
+            ticks: { stepSize: 1 },
+            grid: { color: 'rgba(148, 163, 184, 0.1)' }
+          },
+          x: {
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  }
+
+  // 處理數據並更新畫面
+  function updateDashboard(total, counts) {
+    // 1. 更新總人數
+    // 製作數字跳動動畫效果
+    const totalEl = document.getElementById('total-count');
+    const currentTotal = parseInt(totalEl.innerText) || 0;
+    if (currentTotal !== total) {
+      totalEl.innerText = total;
+      totalEl.classList.remove('scale-110');
+      void totalEl.offsetWidth; // 觸發重繪
+      totalEl.classList.add('scale-110', 'transition-transform', 'duration-300');
+      setTimeout(() => totalEl.classList.remove('scale-110'), 300);
+    }
+
+    // 2. 尋找最高分的屬性
+    let topResult = "等待數據...";
+    let maxCount = -1;
+    labels.forEach(label => {
+      if (counts[label] > maxCount && counts[label] > 0) {
+        maxCount = counts[label];
+        topResult = label;
+      }
+    });
+    
+    // 如果兩人同分或無資料的特別處理
+    if (total === 0) {
+      topResult = "尚無數據寫入";
+    }
+    document.getElementById('top-result').innerText = topResult;
+
+    // 3. 更新圖表數據
+    const dataArray = labels.map(label => counts[label]);
+    
+    if (distributionChartInstance) {
+      distributionChartInstance.data.datasets[0].data = dataArray;
+      distributionChartInstance.update();
+    }
+    
+    if (barChartInstance) {
+      barChartInstance.data.datasets[0].data = dataArray;
+      barChartInstance.update();
+    }
+  }
+
+  // 設定 Firebase 即時監聽
+  function setupRealtimeListener() {
+    const q = query(collection(db, "quests"));
+    
+    // onSnapshot 只要資料庫有變更，就會即時觸發此函數
+    onSnapshot(q, (snapshot) => {
+      let total = 0;
+      let counts = {
+        "濱海巡浪者": 0,
+        "都會文化橋樑": 0,
+        "淺山記憶紡梭": 0,
+        "原鄉山林行者": 0,
+        "埤塘循環創客": 0
+      };
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.result && counts[data.result] !== undefined) {
+          counts[data.result]++;
+        }
+        total++;
+      });
+
+      updateDashboard(total, counts);
+    }, (error) => {
+      console.error("即時同步錯誤: ", error);
+      document.getElementById('top-result').innerText = "連線異常";
+    });
+  }
+
+  // 網頁載入完成後執行
+  window.addEventListener('DOMContentLoaded', () => {
+    initCharts();
+    setupRealtimeListener();
+  });
+</script>
+</body>
+</html>
