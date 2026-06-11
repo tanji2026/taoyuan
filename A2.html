@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>拾光桃園 - 尤努斯獎計畫書封面產生器 (精準導出版)</title>
+    <title>拾光桃園 - 尤努斯獎計畫書封面產生器</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -22,7 +22,6 @@
         
         .font-serif-tc { font-family: 'Noto Serif TC', serif; }
 
-        /* A4 畫布標準規格容器 */
         .a4-canvas {
             position: relative;
             width: 210mm;
@@ -36,13 +35,11 @@
             text-align: center;
         }
 
-        /* 網頁預覽專用的動態縮放外框 */
         #poster-cover {
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             transform-origin: top center;
         }
 
-        /* 桃園專屬暮光微光紋理 */
         .bg-texture {
             background-image: 
                 radial-gradient(rgba(168, 85, 247, 0.08) 1.5px, transparent 1.5px),
@@ -55,7 +52,6 @@
             pointer-events: none;
         }
 
-        /* 暮光薰衣草紫微光 */
         .lavender-glow {
             text-shadow: 0 0 20px rgba(168, 85, 247, 0.5), 0 0 40px rgba(168, 85, 247, 0.25);
         }
@@ -77,19 +73,17 @@
 </head>
 <body class="p-4 md:p-8 flex flex-col xl:flex-row gap-8 justify-center items-start">
 
-    <!-- 左側控制面板 (No-Print) -->
     <div class="control-panel w-full xl:w-[400px] bg-slate-900/90 backdrop-blur-md p-6 rounded-3xl border border-purple-900/30 shadow-2xl flex flex-col gap-6 sticky top-8 z-50">
         <div>
             <div class="flex items-center gap-2 mb-1">
                 <i data-lucide="crown" class="text-purple-400 w-5 h-5"></i>
                 <h1 class="text-xl font-bold text-slate-100 font-serif-tc">尤努斯獎計畫書封面</h1>
             </div>
-            <p class="text-xs text-slate-400 leading-relaxed">內建防位移渲染分身。調整文字到完美狀態後，一鍵導出即可獲得高精度、絕不偏移的 A4 封面圖。</p>
+            <p class="text-xs text-slate-400 leading-relaxed">內建防位移渲染分身。十三隅星芒星象圖已調整至極簡平衡、幾何對稱狀態。</p>
         </div>
 
         <div class="h-px bg-purple-500/10"></div>
 
-        <!-- 編輯欄位 -->
         <div class="flex flex-col gap-4">
             <div>
                 <label class="block text-xs font-bold text-purple-300 tracking-wider mb-2">主辦競賽名稱</label>
@@ -131,18 +125,7 @@
 
         <div class="h-px bg-purple-500/10"></div>
 
-        <!-- 開關控制 -->
         <div class="flex flex-col gap-3">
-            <div class="flex items-center justify-between bg-slate-950/40 p-3 rounded-xl border border-slate-800">
-                <span class="text-xs text-slate-300 font-bold">顯示競賽規範說明框</span>
-                <button id="toggle-guidelines-btn" onclick="toggleGuidelines()" class="px-3 py-1.5 bg-purple-600/20 text-purple-300 border border-purple-500/30 text-xs rounded-lg hover:bg-purple-600/30 transition-all font-bold">
-                    顯示中
-                </button>
-            </div>
-        </div>
-
-        <!-- 導出與下載 -->
-        <div class="flex flex-col gap-3 mt-2">
             <button onclick="downloadCover()" id="downloadBtn" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)] flex items-center justify-center gap-2 text-sm">
                 <i data-lucide="download" class="w-4 h-4"></i>
                 <span>下載 A4 高畫質圖 (PNG)</span>
@@ -154,15 +137,12 @@
         </div>
     </div>
 
-    <!-- 右側 A4 預覽畫布外框 -->
     <div id="a4-wrapper" class="flex justify-center items-start flex-grow">
         <div class="a4-canvas" id="poster-cover">
             <div class="bg-texture"></div>
             
-            <!-- 內容實體區 (採用絕對座標排版，杜絕 html2canvas 彈性像素計算與 translate 偏移) -->
             <div class="absolute inset-0 p-[20mm] z-10 flex flex-col justify-between items-center">
                 
-                <!-- 頂部競賽標記 -->
                 <div class="w-full block shrink-0">
                     <p id="lbl-contest" class="text-[14px] text-purple-300/80 tracking-[0.2em] font-medium mb-4">2026 桃園社會企業創業競賽暨第十一屆尤努斯奬</p>
                     <div class="inline-block px-4 py-1.5 bg-purple-950/40 border border-purple-500/30 rounded text-[16px] text-purple-300 font-bold tracking-[0.3em] uppercase">
@@ -171,45 +151,53 @@
                     <h2 id="lbl-doc" class="text-[28px] font-bold text-slate-100 tracking-[0.4em] mt-8 font-serif-tc pl-4">初賽計畫書</h2>
                 </div>
 
-                <!-- 中部主視覺：數學絕對幾何定點防位移版星芒羅盤 (無 Translate 屬性) -->
                 <div class="relative w-[300px] h-[300px] shrink-0 my-4 block">
-                    <!-- 暮光發光底襯：300px 外框減去 30px 安全邊距，寬高 240px 完美居中 -->
                     <div class="absolute inset-[30px] bg-purple-600/10 rounded-full blur-[60px] pointer-events-none"></div>
                     
-                    <!-- 13區星象圖 SVG (以絕對 Top/Left 取代 Translate，完美置中) -->
                     <svg viewBox="0 0 100 100" class="absolute top-[7.5px] left-[7.5px] w-[285px] h-[285px] opacity-40 pointer-events-none">
                         <circle cx="50" cy="50" r="48" fill="none" stroke="#a855f7" stroke-width="0.3" stroke-dasharray="1 2"/>
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="#a855f7" stroke-width="0.4"/>
-                        <polygon points="50,12 68,17 82,28 88,46 84,66 72,80 54,86 36,82 22,70 16,52 18,34 28,20 40,14" fill="none" stroke="#64748b" stroke-width="0.3"/>
+                        <circle cx="50" cy="50" r="42" fill="none" stroke="#a855f7" stroke-width="0.4"/>
+                        <circle cx="50" cy="50" r="25" fill="none" stroke="#a855f7" stroke-width="0.3"/>
                         <circle cx="50" cy="50" r="16" fill="none" stroke="#a855f7" stroke-width="0.4"/>
-                        <line x1="50" y1="50" x2="50" y2="12" stroke="#a855f7" stroke-width="0.3"/>
-                        <line x1="50" y1="50" x2="68" y2="17" stroke="#a855f7" stroke-width="0.3"/>
-                        <line x1="50" y1="50" x2="82" y2="28" stroke="#a855f7" stroke-width="0.3"/>
-                        <line x1="50" y1="50" x2="88" y2="46" stroke="#a855f7" stroke-width="0.3"/>
-                        <line x1="50" y1="50" x2="84" y2="66" stroke="#a855f7" stroke-width="0.3"/>
-                        <line x1="50" y1="50" x2="72" y2="80" stroke="#a855f7" stroke-width="0.3"/>
-                        <line x1="50" y1="50" x2="54" y2="86" stroke="#a855f7" stroke-width="0.3"/>
-                        <line x1="50" y1="50" x2="36" y2="82" stroke="#a855f7" stroke-width="0.3"/>
-                        <line x1="50" y1="50" x2="22" y2="70" stroke="#a855f7" stroke-width="0.3"/>
-                        <line x1="50" y1="50" x2="16" y2="52" stroke="#a855f7" stroke-width="0.3"/>
-                        <line x1="50" y1="50" x2="18" y2="34" stroke="#a855f7" stroke-width="0.3"/>
-                        <line x1="50" y1="50" x2="28" y2="20" stroke="#a855f7" stroke-width="0.3"/>
-                        <line x1="50" y1="50" x2="40" y2="14" stroke="#a855f7" stroke-width="0.3"/>
+                        
+                        <polygon points="50.00,8.00 69.52,12.81 84.57,26.14 91.69,44.95 89.27,64.89 77.85,81.44 60.05,90.78 39.95,90.78 22.15,81.44 10.73,64.89 8.31,44.95 15.43,26.14 30.48,12.81" fill="none" stroke="#64748b" stroke-width="0.3"/>
+                        <polygon points="50.00,25.00 61.62,27.86 70.58,35.80 74.82,46.99 73.38,58.87 66.58,68.71 55.98,74.27 44.02,74.27 33.42,68.71 26.62,58.87 25.18,46.99 29.42,35.80 38.38,27.86" fill="none" stroke="#a855f7" stroke-width="0.2"/>
+
+                        <line x1="50" y1="50" x2="50.00" y2="8.00" stroke="#a855f7" stroke-width="0.3"/>
+                        <line x1="50" y1="50" x2="69.52" y2="12.81" stroke="#a855f7" stroke-width="0.3"/>
+                        <line x1="50" y1="50" x2="84.57" y2="26.14" stroke="#a855f7" stroke-width="0.3"/>
+                        <line x1="50" y1="50" x2="91.69" y2="44.95" stroke="#a855f7" stroke-width="0.3"/>
+                        <line x1="50" y1="50" x2="89.27" y2="64.89" stroke="#a855f7" stroke-width="0.3"/>
+                        <line x1="50" y1="50" x2="77.85" y2="81.44" stroke="#a855f7" stroke-width="0.3"/>
+                        <line x1="50" y1="50" x2="60.05" y2="90.78" stroke="#a855f7" stroke-width="0.3"/>
+                        <line x1="50" y1="50" x2="39.95" y2="90.78" stroke="#a855f7" stroke-width="0.3"/>
+                        <line x1="50" y1="50" x2="22.15" y2="81.44" stroke="#a855f7" stroke-width="0.3"/>
+                        <line x1="50" y1="50" x2="10.73" y2="64.89" stroke="#a855f7" stroke-width="0.3"/>
+                        <line x1="50" y1="50" x2="8.31" y2="44.95" stroke="#a855f7" stroke-width="0.3"/>
+                        <line x1="50" y1="50" x2="15.43" y2="26.14" stroke="#a855f7" stroke-width="0.3"/>
+                        <line x1="50" y1="50" x2="30.48" y2="12.81" stroke="#a855f7" stroke-width="0.3"/>
+
+                        <circle cx="50.00" cy="8.00" r="1.5" fill="#f8fafc" />
+                        <circle cx="69.52" cy="12.81" r="1.5" fill="#f8fafc" />
+                        <circle cx="84.57" cy="26.14" r="1.5" fill="#f8fafc" />
+                        <circle cx="91.69" cy="44.95" r="1.5" fill="#f8fafc" />
+                        <circle cx="89.27" cy="64.89" r="1.5" fill="#f8fafc" />
+                        <circle cx="77.85" cy="81.44" r="1.5" fill="#f8fafc" />
+                        <circle cx="60.05" cy="90.78" r="1.5" fill="#f8fafc" />
+                        <circle cx="39.95" cy="90.78" r="1.5" fill="#f8fafc" />
+                        <circle cx="22.15" cy="81.44" r="1.5" fill="#f8fafc" />
+                        <circle cx="10.73" cy="64.89" r="1.5" fill="#f8fafc" />
+                        <circle cx="8.31" cy="44.95" r="1.5" fill="#f8fafc" />
+                        <circle cx="15.43" cy="26.14" r="1.5" fill="#f8fafc" />
+                        <circle cx="30.48" cy="12.81" r="1.5" fill="#f8fafc" />
                     </svg>
 
-                    <!-- 星點連線多邊形 SVG -->
-                    <svg viewBox="0 0 100 100" class="absolute top-[7.5px] left-[7.5px] w-[285px] h-[285px] drop-shadow-[0_0_10px_rgba(168,85,247,0.6)] pointer-events-none">
-                        <polygon points="50,22 68,30 84,40 72,66 54,76 36,66 22,50 34,28" fill="rgba(168, 85, 247, 0.15)" stroke="#a855f7" stroke-width="1.2" stroke-linejoin="round"/>
-                    </svg>
-
-                    <!-- 中心羅盤圖標與文字：外框 160x120，利用 top-90px, left-70px 精準將重心壓在正中央 (150, 150) -->
                     <div class="absolute top-[90px] left-[70px] w-[160px] h-[120px] text-center flex flex-col items-center justify-center">
                         <i data-lucide="compass" style="width: 48px; height: 48px;" class="text-purple-400/80 mb-2"></i>
                         <span class="text-[12px] text-purple-300 font-mono tracking-[0.25em] pl-[0.25em]">TAOYUAN STAR</span>
                     </div>
                 </div>
 
-                <!-- 計畫大標題與副標題 -->
                 <div class="w-full block shrink-0">
                     <h1 id="lbl-title" class="text-[44px] font-black leading-tight tracking-[0.1em] mb-4 font-serif-tc text-slate-100 lavender-glow">
                         拾光桃園：十三隅星芒
@@ -219,20 +207,7 @@
                     </p>
                 </div>
 
-                <!-- 競賽規範說明框 (Toggleable) -->
-                <div id="guidelines-box" class="w-full bg-slate-950/60 backdrop-blur-md border border-dashed border-purple-500/40 p-5 rounded-2xl text-left font-sans block shrink-0 relative mt-2">
-                    <div class="absolute -top-3 left-4 px-3 py-0.5 bg-purple-900/60 border border-purple-500/30 rounded text-[10px] tracking-widest text-purple-300 font-bold uppercase">CONTEST RULE</div>
-                    <p class="text-[12px] text-purple-300/90 leading-relaxed font-bold">說明框指示：繳交時可自行刪除此框</p>
-                    <p class="text-[11px] text-slate-400 leading-relaxed font-light mt-1">
-                        1. 本頁為封面頁，除保留說明框以上之文字（包含競賽名稱與組別）外，其他可自行設計封面。<br>
-                        2. 相關章節建議配合圖片與表格說明，以利評審委員閱讀與理解。<br>
-                        3. 報名截止日：2026年06月22日（星期一）中午12:00前。<br>
-                        4. 計畫書頁數限制：內文至多15頁，封面不列入計算。
-                    </p>
-                </div>
-
-                <!-- 底部團隊代表資訊 -->
-                <div class="w-full border-t border-purple-500/20 pt-6 block shrink-0 flex flex-col items-center gap-1.5">
+                <div class="w-full border-t border-purple-500/20 pt-12 block shrink-0 flex flex-col items-center gap-1.5">
                     <div class="flex items-center justify-center gap-2">
                         <span class="text-[13px] text-purple-400/80 font-bold tracking-[0.2em]">提案團隊：</span>
                         <span id="lbl-team" class="text-[16px] text-slate-100 font-bold tracking-[0.2em]">碳吉 TanJi</span>
@@ -244,11 +219,9 @@
         </div>
     </div>
 
-    <!-- 腳本邏輯區：內建 Off-screen 沙盒導出技術，杜絕位移 -->
     <script>
         lucide.createIcons();
 
-        // 綁定輸入即時連動
         const inputs = {
             'in-contest': 'lbl-contest',
             'in-group': 'lbl-group',
@@ -266,7 +239,6 @@
             });
         });
 
-        // 僅控制網頁畫面預覽縮放，不影響導出
         function resizePreview() {
             const wrapper = document.getElementById('a4-wrapper');
             const preview = document.getElementById('poster-cover');
@@ -289,25 +261,6 @@
             }
         }
 
-        // 開關說明框
-        let showGuidelines = true;
-        function toggleGuidelines() {
-            showGuidelines = !showGuidelines;
-            const box = document.getElementById('guidelines-box');
-            const btn = document.getElementById('toggle-guidelines-btn');
-            
-            if (showGuidelines) {
-                box.style.display = "block";
-                btn.innerText = "顯示中";
-                btn.className = "px-3 py-1.5 bg-purple-600/20 text-purple-300 border border-purple-500/30 text-xs rounded-lg hover:bg-purple-600/30 transition-all font-bold";
-            } else {
-                box.style.display = "none";
-                btn.innerText = "已隱藏";
-                btn.className = "px-3 py-1.5 bg-slate-800 text-slate-400 border border-slate-700 text-xs rounded-lg hover:bg-slate-700 transition-all font-bold";
-            }
-        }
-
-        // 🚀 核心優化：沙盒分身導出法 (Off-screen Canvas Sandbox)
         async function downloadCover() {
             const btn = document.getElementById('downloadBtn');
             const originalContent = btn.innerHTML;
@@ -318,27 +271,18 @@
             lucide.createIcons(); 
 
             try {
-                // 1. 在背景臨時建立一個「完全獨立、無網頁縮放干擾」的分身容器
                 const sandbox = originalSource.cloneNode(true);
                 sandbox.style.transform = 'none';
                 sandbox.style.position = 'fixed';
                 sandbox.style.top = '0';
-                sandbox.style.left = '-9999px'; // 移出螢幕可見區域
+                sandbox.style.left = '-9999px'; 
                 document.body.appendChild(sandbox);
 
-                // 2. 如果使用者在控制台關閉了說明框，背景分身也必須同步隱藏
-                const sandboxGuidelines = sandbox.querySelector('#guidelines-box');
-                if (!showGuidelines && sandboxGuidelines) {
-                    sandboxGuidelines.style.display = 'none';
-                }
-
-                // 等待字體加載完成
                 await document.fonts.ready;
                 await new Promise(resolve => setTimeout(resolve, 500));
 
-                // 3. 擷取這個絕對純淨、1:1 的背景分身
                 const canvas = await html2canvas(sandbox, {
-                    scale: 2.0, // 強制雙倍超高清導出
+                    scale: 2.0, 
                     useCORS: true,
                     allowTaint: true,
                     backgroundColor: '#0b0f19',
@@ -349,10 +293,8 @@
                     windowHeight: sandbox.offsetHeight
                 });
 
-                // 4. 用完立刻把分身銷毀
                 document.body.removeChild(sandbox);
 
-                // 觸發下載
                 const link = document.createElement('a');
                 link.download = `拾光桃園_尤努斯計畫書封面_${document.getElementById('lbl-team').innerText}.png`;
                 link.href = canvas.toDataURL('image/png', 1.0);
