@@ -437,14 +437,14 @@
     let subtitleHtml = `
       在桃園，你最適合哪種生活提案？<br/>
       憑直覺回答 5 個問題，找出你的隱藏屬性，<br/>
-      解鎖專屬的週末永續走讀與風格活動。
+      解鎖專屬的永續走讀與風格活動。
     `;
 
     if (needParam && results[needParam]) {
         subtitleHtml = `
           <span class="text-purple-400 font-bold block mb-2">朋友正在尋找【${results[needParam].class}】夥伴！</span>
           在桃園，你最適合哪種生活提案？<br/>
-          找出你的隱藏屬性，解鎖專屬的週末永續走讀與風格活動。
+          找出你的隱藏屬性，解鎖專屬的永續走讀與風格活動。
         `;
     }
 
@@ -609,7 +609,7 @@
             <div class="flex items-center justify-between mb-3">
               <h3 class="font-bold text-slate-100 flex items-center gap-2 text-base tracking-wider">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-                專屬週末風格指南
+                專屬風格活動指南
               </h3>
             </div>
             
@@ -674,7 +674,7 @@
           
           <div class="text-center mt-6 pb-6">
             <button onclick="handleStart()" class="text-slate-400 text-sm hover:text-purple-300 transition-colors tracking-widest outline-none py-2 px-4 font-bold border-b border-slate-600 hover:border-purple-400/50 pb-1">
-              重新探索風格
+              重新探索
             </button>
           </div>
         </div>
