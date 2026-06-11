@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>拾光桃園 - 尤努斯獎計畫書封面產生器</title>
+    <title>拾光桃園 - 尤努斯獎計畫書封面產生器 (精準導出版)</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -22,18 +22,23 @@
         
         .font-serif-tc { font-family: 'Noto Serif TC', serif; }
 
-        /* 嚴格控制 A4 物理比例 (210mm x 297mm) */
-        .a4-preview-container {
+        /* A4 畫布標準規格容器 */
+        .a4-canvas {
             position: relative;
             width: 210mm;
             height: 297mm;
             background: linear-gradient(135deg, #0b0f19 0%, #1e1b4b 50%, #090d16 100%);
             box-sizing: border-box;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             display: flex;
             flex-direction: column;
             overflow: hidden;
             flex-shrink: 0;
+            text-align: center;
+        }
+
+        /* 網頁預覽專用的動態縮放外框 */
+        #poster-cover {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             transform-origin: top center;
         }
 
@@ -55,18 +60,6 @@
             text-shadow: 0 0 20px rgba(168, 85, 247, 0.5), 0 0 40px rgba(168, 85, 247, 0.25);
         }
 
-        /* 導出模式下，強制移除陰影、縮放等干擾，並轉為標準 A4 尺寸 */
-        .export-mode {
-            transform: none !important;
-            box-shadow: none !important;
-            width: 210mm !important;
-            height: 297mm !important;
-        }
-
-        .export-mode .export-hide {
-            display: none !important;
-        }
-
         @media print {
             body {
                 background: white !important;
@@ -74,12 +67,9 @@
                 display: block;
             }
             .control-panel { display: none !important; }
-            .a4-preview-container {
+            #poster-cover {
                 transform: none !important;
                 box-shadow: none !important;
-                width: 210mm !important;
-                height: 297mm !important;
-                page-break-after: avoid;
                 margin: 0 !important;
             }
         }
@@ -94,7 +84,7 @@
                 <i data-lucide="crown" class="text-purple-400 w-5 h-5"></i>
                 <h1 class="text-xl font-bold text-slate-100 font-serif-tc">尤努斯獎計畫書封面</h1>
             </div>
-            <p class="text-xs text-slate-400 leading-relaxed">請在下方即時修改計畫資訊，右側將會同步顯示。建議點擊「下載 A4 高畫質圖」以獲得最佳印刷效果。</p>
+            <p class="text-xs text-slate-400 leading-relaxed">內建防位移渲染分身。調整文字到完美狀態後，一鍵導出即可獲得高精度、絕不偏移的 A4 封面圖。</p>
         </div>
 
         <div class="h-px bg-purple-500/10"></div>
@@ -164,16 +154,16 @@
         </div>
     </div>
 
-    <!-- 右側 A4 預覽區 -->
+    <!-- 右側 A4 預覽畫布外框 -->
     <div id="a4-wrapper" class="flex justify-center items-start flex-grow">
-        <div class="a4-preview-container" id="poster-cover">
+        <div class="a4-canvas" id="poster-cover">
             <div class="bg-texture"></div>
             
-            <!-- 內容實體區 (使用 padding 模擬書本邊界安全區域) -->
-            <div class="relative z-10 p-[20mm] h-full flex flex-col justify-between items-center text-center">
+            <!-- 內容實體區 (採用絕對座標排版，杜絕 html2canvas 彈性像素計算與 translate 偏移) -->
+            <div class="absolute inset-0 p-[20mm] z-10 flex flex-col justify-between items-center">
                 
                 <!-- 頂部競賽標記 -->
-                <div class="w-full flex flex-col items-center">
+                <div class="w-full block shrink-0">
                     <p id="lbl-contest" class="text-[14px] text-purple-300/80 tracking-[0.2em] font-medium mb-4">2026 桃園社會企業創業競賽暨第十一屆尤努斯奬</p>
                     <div class="inline-block px-4 py-1.5 bg-purple-950/40 border border-purple-500/30 rounded text-[16px] text-purple-300 font-bold tracking-[0.3em] uppercase">
                         <span id="lbl-group">【社會影響力組】</span>
@@ -181,19 +171,17 @@
                     <h2 id="lbl-doc" class="text-[28px] font-bold text-slate-100 tracking-[0.4em] mt-8 font-serif-tc pl-4">初賽計畫書</h2>
                 </div>
 
-                <!-- 中部主視覺：桃園十三隅星芒羅盤 -->
-                <div class="relative w-[300px] h-[300px] flex items-center justify-center my-6">
-                    <!-- 暮光紫色發光背景 -->
-                    <div class="absolute w-[240px] h-[240px] bg-purple-600/10 rounded-full blur-[60px] pointer-events-none"></div>
+                <!-- 中部主視覺：數學絕對幾何定點防位移版星芒羅盤 (無 Translate 屬性) -->
+                <div class="relative w-[300px] h-[300px] shrink-0 my-4 block">
+                    <!-- 暮光發光底襯：300px 外框減去 30px 安全邊距，寬高 240px 完美居中 -->
+                    <div class="absolute inset-[30px] bg-purple-600/10 rounded-full blur-[60px] pointer-events-none"></div>
                     
-                    <!-- 13區星象圖 SVG -->
-                    <svg viewBox="0 0 100 100" class="absolute w-[95%] h-[95%] opacity-40 pointer-events-none">
+                    <!-- 13區星象圖 SVG (以絕對 Top/Left 取代 Translate，完美置中) -->
+                    <svg viewBox="0 0 100 100" class="absolute top-[7.5px] left-[7.5px] w-[285px] h-[285px] opacity-40 pointer-events-none">
                         <circle cx="50" cy="50" r="48" fill="none" stroke="#a855f7" stroke-width="0.3" stroke-dasharray="1 2"/>
                         <circle cx="50" cy="50" r="40" fill="none" stroke="#a855f7" stroke-width="0.4"/>
-                        <!-- 13隅幾何多邊形 -->
                         <polygon points="50,12 68,17 82,28 88,46 84,66 72,80 54,86 36,82 22,70 16,52 18,34 28,20 40,14" fill="none" stroke="#64748b" stroke-width="0.3"/>
                         <circle cx="50" cy="50" r="16" fill="none" stroke="#a855f7" stroke-width="0.4"/>
-                        <!-- 連線放射線 -->
                         <line x1="50" y1="50" x2="50" y2="12" stroke="#a855f7" stroke-width="0.3"/>
                         <line x1="50" y1="50" x2="68" y2="17" stroke="#a855f7" stroke-width="0.3"/>
                         <line x1="50" y1="50" x2="82" y2="28" stroke="#a855f7" stroke-width="0.3"/>
@@ -209,32 +197,33 @@
                         <line x1="50" y1="50" x2="40" y2="14" stroke="#a855f7" stroke-width="0.3"/>
                     </svg>
 
-                    <!-- 星點發光描邊 -->
-                    <svg viewBox="0 0 100 100" class="absolute w-[95%] h-[95%] drop-shadow-[0_0_10px_rgba(168,85,247,0.6)] pointer-events-none">
+                    <!-- 星點連線多邊形 SVG -->
+                    <svg viewBox="0 0 100 100" class="absolute top-[7.5px] left-[7.5px] w-[285px] h-[285px] drop-shadow-[0_0_10px_rgba(168,85,247,0.6)] pointer-events-none">
                         <polygon points="50,22 68,30 84,40 72,66 54,76 36,66 22,50 34,28" fill="rgba(168, 85, 247, 0.15)" stroke="#a855f7" stroke-width="1.2" stroke-linejoin="round"/>
                     </svg>
 
-                    <div class="absolute text-center z-10 flex flex-col items-center justify-center">
+                    <!-- 中心羅盤圖標與文字：外框 160x120，利用 top-90px, left-70px 精準將重心壓在正中央 (150, 150) -->
+                    <div class="absolute top-[90px] left-[70px] w-[160px] h-[120px] text-center flex flex-col items-center justify-center">
                         <i data-lucide="compass" style="width: 48px; height: 48px;" class="text-purple-400/80 mb-2"></i>
                         <span class="text-[12px] text-purple-300 font-mono tracking-[0.25em] pl-[0.25em]">TAOYUAN STAR</span>
                     </div>
                 </div>
 
                 <!-- 計畫大標題與副標題 -->
-                <div class="w-full flex flex-col items-center">
+                <div class="w-full block shrink-0">
                     <h1 id="lbl-title" class="text-[44px] font-black leading-tight tracking-[0.1em] mb-4 font-serif-tc text-slate-100 lavender-glow">
                         拾光桃園：十三隅星芒
                     </h1>
-                    <p id="lbl-subtitle" class="text-[16px] text-slate-300 max-w-[500px] leading-relaxed tracking-[0.15em] font-light font-sans pl-2">
+                    <p id="lbl-subtitle" class="text-[16px] text-slate-300 max-w-[500px] mx-auto leading-relaxed tracking-[0.15em] font-light font-sans pl-2">
                         融合地方永續特質與風格探索的青年走讀平台
                     </p>
                 </div>
 
-                <!-- 社會企業創業競賽專用：規範說明框 (Toggleable) -->
-                <div id="guidelines-box" class="w-full bg-slate-950/60 backdrop-blur-md border border-dashed border-purple-500/40 p-5 rounded-2xl text-left font-sans flex flex-col gap-2 mt-4 relative">
+                <!-- 競賽規範說明框 (Toggleable) -->
+                <div id="guidelines-box" class="w-full bg-slate-950/60 backdrop-blur-md border border-dashed border-purple-500/40 p-5 rounded-2xl text-left font-sans block shrink-0 relative mt-2">
                     <div class="absolute -top-3 left-4 px-3 py-0.5 bg-purple-900/60 border border-purple-500/30 rounded text-[10px] tracking-widest text-purple-300 font-bold uppercase">CONTEST RULE</div>
                     <p class="text-[12px] text-purple-300/90 leading-relaxed font-bold">說明框指示：繳交時可自行刪除此框</p>
-                    <p class="text-[11px] text-slate-400 leading-relaxed font-light">
+                    <p class="text-[11px] text-slate-400 leading-relaxed font-light mt-1">
                         1. 本頁為封面頁，除保留說明框以上之文字（包含競賽名稱與組別）外，其他可自行設計封面。<br>
                         2. 相關章節建議配合圖片與表格說明，以利評審委員閱讀與理解。<br>
                         3. 報名截止日：2026年06月22日（星期一）中午12:00前。<br>
@@ -243,8 +232,8 @@
                 </div>
 
                 <!-- 底部團隊代表資訊 -->
-                <div class="w-full border-t border-purple-500/20 pt-8 mt-4 flex flex-col items-center gap-1.5">
-                    <div class="flex items-center gap-2">
+                <div class="w-full border-t border-purple-500/20 pt-6 block shrink-0 flex flex-col items-center gap-1.5">
+                    <div class="flex items-center justify-center gap-2">
                         <span class="text-[13px] text-purple-400/80 font-bold tracking-[0.2em]">提案團隊：</span>
                         <span id="lbl-team" class="text-[16px] text-slate-100 font-bold tracking-[0.2em]">碳吉 TanJi</span>
                     </div>
@@ -255,7 +244,7 @@
         </div>
     </div>
 
-    <!-- 下載與輸入連動腳本 -->
+    <!-- 腳本邏輯區：內建 Off-screen 沙盒導出技術，杜絕位移 -->
     <script>
         lucide.createIcons();
 
@@ -277,26 +266,25 @@
             });
         });
 
-        // 控制 A4 預覽在桌面視窗下的等比例縮放，避免太長溢出
+        // 僅控制網頁畫面預覽縮放，不影響導出
         function resizePreview() {
             const wrapper = document.getElementById('a4-wrapper');
             const preview = document.getElementById('poster-cover');
             const windowHeight = window.innerHeight;
-            const targetWidth = 794; // approx A4 in pixels
+            const targetWidth = 794; 
             const targetHeight = 1123;
             
             const spaceNeededY = windowHeight - 120;
             const scaleY = spaceNeededY / targetHeight;
             
-            // 僅在寬螢幕下對 A4 紙進行縮放，行動裝置則自然寬度顯示
             if (window.innerWidth > 1024) {
                 const scale = Math.min(scaleY, 1.0);
                 preview.style.transform = `scale(${scale})`;
                 wrapper.style.height = `${targetHeight * scale}px`;
                 wrapper.style.width = `${targetWidth * scale}px`;
             } else {
-                preview.style.transform = "scale(0.8)";
-                wrapper.style.height = `${targetHeight * 0.8}px`;
+                preview.style.transform = "scale(0.75)";
+                wrapper.style.height = `${targetHeight * 0.75}px`;
                 wrapper.style.width = "auto";
             }
         }
@@ -309,49 +297,60 @@
             const btn = document.getElementById('toggle-guidelines-btn');
             
             if (showGuidelines) {
-                box.classList.remove('hidden');
+                box.style.display = "block";
                 btn.innerText = "顯示中";
                 btn.className = "px-3 py-1.5 bg-purple-600/20 text-purple-300 border border-purple-500/30 text-xs rounded-lg hover:bg-purple-600/30 transition-all font-bold";
             } else {
-                box.classList.add('hidden');
+                box.style.display = "none";
                 btn.innerText = "已隱藏";
                 btn.className = "px-3 py-1.5 bg-slate-800 text-slate-400 border border-slate-700 text-xs rounded-lg hover:bg-slate-700 transition-all font-bold";
             }
         }
 
-        // 導出 A4 高清圖片 (PNG)
+        // 🚀 核心優化：沙盒分身導出法 (Off-screen Canvas Sandbox)
         async function downloadCover() {
             const btn = document.getElementById('downloadBtn');
             const originalContent = btn.innerHTML;
-            const poster = document.getElementById('poster-cover');
+            const originalSource = document.getElementById('poster-cover');
             
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> <span>高清封面渲染中...</span>';
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> <span>精準像素對齊中...</span>';
             btn.disabled = true;
             lucide.createIcons(); 
 
             try {
-                // 儲存原本的縮放狀態
-                const currentTransform = poster.style.transform;
-                
-                // 強制將預覽容器還原為原始 dimensions，並進入輸出模式
-                poster.style.transform = 'none';
-                poster.classList.add('export-mode'); 
-                
-                await document.fonts.ready;
-                await new Promise(resolve => setTimeout(resolve, 800)); // 留時間等渲染
+                // 1. 在背景臨時建立一個「完全獨立、無網頁縮放干擾」的分身容器
+                const sandbox = originalSource.cloneNode(true);
+                sandbox.style.transform = 'none';
+                sandbox.style.position = 'fixed';
+                sandbox.style.top = '0';
+                sandbox.style.left = '-9999px'; // 移出螢幕可見區域
+                document.body.appendChild(sandbox);
 
-                const canvas = await html2canvas(poster, {
-                    scale: 2.0, // 2倍高畫質導出
+                // 2. 如果使用者在控制台關閉了說明框，背景分身也必須同步隱藏
+                const sandboxGuidelines = sandbox.querySelector('#guidelines-box');
+                if (!showGuidelines && sandboxGuidelines) {
+                    sandboxGuidelines.style.display = 'none';
+                }
+
+                // 等待字體加載完成
+                await document.fonts.ready;
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                // 3. 擷取這個絕對純淨、1:1 的背景分身
+                const canvas = await html2canvas(sandbox, {
+                    scale: 2.0, // 強制雙倍超高清導出
                     useCORS: true,
                     allowTaint: true,
                     backgroundColor: '#0b0f19',
                     logging: false,
-                    imageTimeout: 0,
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: sandbox.offsetWidth,
+                    windowHeight: sandbox.offsetHeight
                 });
 
-                // 還原狀態
-                poster.style.transform = currentTransform;
-                poster.classList.remove('export-mode');
+                // 4. 用完立刻把分身銷毀
+                document.body.removeChild(sandbox);
 
                 // 觸發下載
                 const link = document.createElement('a');
@@ -360,10 +359,8 @@
                 link.click();
                 
             } catch (error) {
-                console.error("封面下載失敗:", error);
+                console.error("封面精準導出失敗:", error);
                 alert("圖片渲染失敗，請確認是否遭跨域資源擋住。");
-                poster.style.transform = "";
-                poster.classList.remove('export-mode');
             } finally {
                 btn.innerHTML = originalContent;
                 btn.disabled = false;
